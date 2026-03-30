@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Treino Heloysa</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800;900&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #FF6B35;
+    --teal: #00C9A7;
+    --purple: #A855F7;
+    --amber: #F59E0B;
+    --bg: #0c0c0e;
+    --card: #111113;
+    --border: #1e1e22;
+    --muted: #666;
+    --text: #f0f0f0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #0c0c0e 0%, #13132b 100%);
+    border-bottom: 1px solid #1e1e2e;
+    padding: 36px 24px 28px;
+    text-align: center;
+  }
+
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: 'Syne', sans-serif;
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(28px, 7vw, 42px);
+    font-weight: 900;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, #FF6B35, #A855F7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+  }
+
+  .header-sub {
+    margin-top: 8px;
+    font-size: 13px;
+    color: #555;
+  }
+
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 22px;
+    flex-wrap: wrap;
+  }
+
+  .stat-box {
+    background: #16161a;
+    border: 1px solid #2a2a30;
+    border-radius: 12px;
+    padding: 11px 20px;
+    text-align: center;
+  }
+
+  .stat-box .val {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .stat-box .lbl {
+    font-size: 10px;
+    color: #555;
+    margin-top: 2px;
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    padding: 20px 14px 0;
+    justify-content: center;
+    flex-wrap: wrap;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 68px;
+    max-width: 130px;
+    padding: 12px 6px;
+    border-radius: 14px;
+    border: 2px solid #1e1e22;
+    background: #111113;
+    color: #444;
+    cursor: pointer;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    transition: all 0.22s ease;
+    outline: none;
+  }
+
+  .tab .icon { font-size: 18px; }
+  .tab .tab-day { font-size: 10px; font-weight: 400; opacity: 0.5; }
+
+  .tab.active-orange { border-color: var(--orange); background: #1a0800; color: var(--orange); }
+  .tab.active-teal   { border-color: var(--teal);   background: #00100d; color: var(--teal);   }
+  .tab.active-purple { border-color: var(--purple); background: #0d0017; color: var(--purple); }
+  .tab.active-amber  { border-color: var(--amber);  background: #100900; color: var(--amber);  }
+
+  /* CONTENT */
+  .content {
+    padding: 16px 14px 0;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  /* DAY CARD */
+  .day-header {
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border: 1px solid transparent;
+  }
+
+  .day-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; flex-shrink: 0;
+    border: 2px solid;
+  }
+
+  .day-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+  }
+
+  .day-meta { font-size: 12px; color: #666; margin-top: 3px; }
+
+  /* EXERCISES */
+  .exercises { display: flex; flex-direction: column; gap: 9px; }
+
+  .ex-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .ex-header {
+    display: flex;
+    align-items: center;
+    padding: 13px 14px;
+    gap: 12px;
+  }
+
+  .ex-num {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 12px; flex-shrink: 0;
+  }
+
+  .ex-info { flex: 1; }
+  .ex-name { font-weight: 600; font-size: 13px; }
+  .ex-meta { font-size: 11px; color: #777; margin-top: 2px; }
+
+  .ex-arrow {
+    font-size: 16px;
+    color: #444;
+    transition: transform 0.22s;
+    flex-shrink: 0;
+  }
+
+  .ex-tip {
+    display: none;
+    padding: 10px 14px 13px 54px;
+    font-size: 12px;
+    color: #aaa;
+    line-height: 1.65;
+    border-top: 1px solid transparent;
+  }
+
+  .ex-card.open .ex-arrow { transform: rotate(180deg); }
+  .ex-card.open .ex-tip { display: block; }
+
+  /* CARDIO */
+  .cardio-block {
+    margin-top: 12px;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 13px 15px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    border: 1px solid transparent;
+  }
+
+  .cardio-icon { font-size: 20px; flex-shrink: 0; }
+  .cardio-label { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px; margin-bottom: 4px; }
+  .cardio-text { font-size: 12px; color: #aaa; line-height: 1.6; }
+
+  /* SCHEDULE */
+  .schedule-wrap {
+    margin-top: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    color: #555;
+    text-transform: uppercase;
+    font-family: 'Syne', sans-serif;
+    margin-bottom: 12px;
+  }
+
+  .schedule-days {
+    display: flex;
+    gap: 5px;
+  }
+
+  .sched-day {
+    flex: 1;
+    text-align: center;
+    border-radius: 10px;
+    padding: 9px 3px;
+    border: 1px solid #1a1a1a;
+    background: #0a0a0c;
+  }
+
+  .sched-day-name { font-size: 9px; color: #444; margin-bottom: 4px; }
+  .sched-day-letter { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 800; color: #252525; }
+
+  .schedule-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #666;
+  }
+
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  /* TIPS */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .tip-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 11px 12px;
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+    font-size: 11px;
+    color: #888;
+    line-height: 1.55;
+  }
+
+  .tip-icon { font-size: 15px; flex-shrink: 0; }
+
+  /* PANEL VISIBILITY */
+  .panel { display: none; }
+  .panel.active { display: block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Programa de Treino</div>
+  <h1>Treino Heloysa</h1>
+  <div class="header-sub">17 anos · 160cm · 85kg · Perda de Peso + Hipertrofia</div>
+  <div class="stats-row">
+    <div class="stat-box"><div class="val">3</div><div class="lbl">Dias/semana</div></div>
+    <div class="stat-box"><div class="val">7–8</div><div class="lbl">Exercícios/dia</div></div>
+    <div class="stat-box"><div class="val">20min</div><div class="lbl">Cardio/dia</div></div>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab active-orange" onclick="switchDay('A', this)">
+    <span class="icon">🦵</span>
+    <span>Quadríceps</span>
+    <span class="tab-day">Segunda</span>
+  </button>
+  <button class="tab" onclick="switchDay('B', this)">
+    <span class="icon">💪</span>
+    <span>Superiores</span>
+    <span class="tab-day">Quarta</span>
+  </button>
+  <button class="tab" onclick="switchDay('C', this)">
+    <span class="icon">🔥</span>
+    <span>Glúteos</span>
+    <span class="tab-day">Sexta</span>
+  </button>
+
+</div>
+
+<!-- ======= PANEL A ======= -->
+<div class="content panel active" id="panel-A">
+  <div class="day-header" style="background:linear-gradient(135deg,#1a0800,#111);border-color:#FF6B3533;">
+    <div class="day-icon" style="background:#FF6B3522;border-color:#FF6B35;">🦵</div>
+    <div>
+      <div class="day-title" style="color:#FF6B35;">Quadríceps & Panturrilha</div>
+      <div class="day-meta">📅 Segunda-feira · 7 exercícios</div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-card" onclick="toggleEx(this)" style="--c:#FF6B35;">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">1</div>
+        <div class="ex-info">
+          <div class="ex-name">Agachamento Livre</div>
+          <div class="ex-meta">4 séries × 12 reps · descanso 90s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Desça até 90°, joelhos na direção dos pés, tronco ereto</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">2</div>
+        <div class="ex-info">
+          <div class="ex-name">Leg Press 45° (pés baixos e juntos)</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 75s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Pés na parte baixa da plataforma para enfatizar o quadríceps</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">3</div>
+        <div class="ex-info">
+          <div class="ex-name">Cadeira Extensora</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Pause 1 segundo no topo, desça controlado em 3 segundos</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">4</div>
+        <div class="ex-info">
+          <div class="ex-name">Hack Squat ou Agachamento Sumô</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 75s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Costas coladas no apoio, joelhos seguem a ponta dos pés</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">5</div>
+        <div class="ex-info">
+          <div class="ex-name">Avanço/Afundo com Halteres</div>
+          <div class="ex-meta">3 séries × 12 reps cada · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Passo longo, joelho da frente a 90° sem ultrapassar o pé</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">6</div>
+        <div class="ex-info">
+          <div class="ex-name">Panturrilha em Pé (Smith ou livre)</div>
+          <div class="ex-meta">4 séries × 20 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Suba na ponta, pause 1s no topo, desça lentamente em 3s</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#FF6B3522;color:#FF6B35;">7</div>
+        <div class="ex-info">
+          <div class="ex-name">Panturrilha Sentada (máquina)</div>
+          <div class="ex-meta">3 séries × 20 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#FF6B3522;">💡 Trabalha o sóleo — amplitude completa em cada repetição</div>
+    </div>
+  </div>
+
+  <div class="cardio-block" style="border-color:#FF6B3544;">
+    <div class="cardio-icon">🏃‍♀️</div>
+    <div>
+      <div class="cardio-label" style="color:#FF6B35;">Cardio do dia</div>
+      <div class="cardio-text">20 min esteira inclinada (inclinação 8–10%, velocidade 5 km/h)</div>
+    </div>
+  </div>
+
+  <div id="schedule-A"></div>
+</div>
+
+<!-- ======= PANEL B ======= -->
+<div class="content panel" id="panel-B">
+  <div class="day-header" style="background:linear-gradient(135deg,#00100d,#111);border-color:#00C9A733;">
+    <div class="day-icon" style="background:#00C9A722;border-color:#00C9A7;">💪</div>
+    <div>
+      <div class="day-title" style="color:#00C9A7;">Peito, Costas, Ombros & Braços</div>
+      <div class="day-meta">📅 Quarta-feira · 8 exercícios</div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">1</div>
+        <div class="ex-info">
+          <div class="ex-name">Supino Inclinado com Halteres</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Desça controlado até o peito, suba explosivo</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">2</div>
+        <div class="ex-info">
+          <div class="ex-name">Puxada Frontal (Pulley)</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Puxe até o queixo, escápulas juntas no final do movimento</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">3</div>
+        <div class="ex-info">
+          <div class="ex-name">Remada Curvada com Barra</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Tronco a ~45°, puxe em direção ao umbigo</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">4</div>
+        <div class="ex-info">
+          <div class="ex-name">Desenvolvimento com Halteres</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Não bloqueie os cotovelos no topo, cotovelos na linha dos ombros</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">5</div>
+        <div class="ex-info">
+          <div class="ex-name">Elevação Lateral</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Cotovelos levemente dobrados, suba até a altura dos ombros</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">6</div>
+        <div class="ex-info">
+          <div class="ex-name">Rosca Direta com Barra</div>
+          <div class="ex-meta">3 séries × 12 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Cotovelos fixos ao lado do corpo, não balance o tronco</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">7</div>
+        <div class="ex-info">
+          <div class="ex-name">Tríceps Polia (corda)</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Cotovelos fixos, estenda completamente, abra a corda no final</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#00C9A722;color:#00C9A7;">8</div>
+        <div class="ex-info">
+          <div class="ex-name">Prancha Frontal</div>
+          <div class="ex-meta">3 séries × 30–45s · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#00C9A722;">💡 Corpo em linha reta, não deixe o quadril cair ou subir demais</div>
+    </div>
+  </div>
+
+  <div class="cardio-block" style="border-color:#00C9A744;">
+    <div class="cardio-icon">🏃‍♀️</div>
+    <div>
+      <div class="cardio-label" style="color:#00C9A7;">Cardio do dia</div>
+      <div class="cardio-text">20 min elíptico ou bicicleta ergométrica em ritmo moderado</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= PANEL C ======= -->
+<div class="content panel" id="panel-C">
+  <div class="day-header" style="background:linear-gradient(135deg,#0d0017,#111);border-color:#A855F733;">
+    <div class="day-icon" style="background:#A855F722;border-color:#A855F7;">🔥</div>
+    <div>
+      <div class="day-title" style="color:#A855F7;">Glúteos & Panturrilha</div>
+      <div class="day-meta">📅 Sexta-feira · 6 exercícios</div>
+    </div>
+  </div>
+
+  <div class="exercises">
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">1</div>
+        <div class="ex-info">
+          <div class="ex-name">Agachamento Sumô com Halter</div>
+          <div class="ex-meta">4 séries × 12 reps · descanso 75s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Pés bem abertos, ponta dos pés para fora — enfatiza glúteo medial</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">2</div>
+        <div class="ex-info">
+          <div class="ex-name">Hip Thrust com Barra</div>
+          <div class="ex-meta">4 séries × 15 reps · descanso 75s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Ombros apoiados no banco, empurre o quadril para cima, contraia no topo</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">3</div>
+        <div class="ex-info">
+          <div class="ex-name">Leg Press 45° (pés altos e abertos)</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 75s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Pés na parte alta da plataforma para transferir a tensão para o glúteo</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">4</div>
+        <div class="ex-info">
+          <div class="ex-name">Mesa Flexora</div>
+          <div class="ex-meta">3 séries × 15 reps · descanso 60s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Desça lentamente (3 segundos), suba mais rápido — ativa glúteo e isquiotibial</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">5</div>
+        <div class="ex-info">
+          <div class="ex-name">Abdução em Pé na Polia (ou máquina)</div>
+          <div class="ex-meta">3 séries × 20 reps cada · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Movimento controlado, não balance o quadril para compensar</div>
+    </div>
+    <div class="ex-card" onclick="toggleEx(this)">
+      <div class="ex-header">
+        <div class="ex-num" style="background:#A855F722;color:#A855F7;">6</div>
+        <div class="ex-info">
+          <div class="ex-name">Panturrilha em Pé (Smith ou livre)</div>
+          <div class="ex-meta">4 séries × 20 reps · descanso 45s</div>
+        </div>
+        <div class="ex-arrow">▾</div>
+      </div>
+      <div class="ex-tip" style="border-color:#A855F722;">💡 Amplitude total — calcanhar abaixo do degrau se possível</div>
+    </div>
+  </div>
+
+  <div class="cardio-block" style="border-color:#A855F744;">
+    <div class="cardio-icon">🏃‍♀️</div>
+    <div>
+      <div class="cardio-label" style="color:#A855F7;">Cardio do dia</div>
+      <div class="cardio-text">20 min HIIT: 30s corrida (7–8 km/h) + 30s caminhada — repetir 20x</div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- SCHEDULE (shared) -->
+<div class="content" style="margin-top:20px;">
+  <div class="schedule-wrap">
+    <div class="section-label">Agenda semanal</div>
+    <div class="schedule-days">
+      <div class="sched-day" style="background:#FF6B3518;border-color:#FF6B3544;">
+        <div class="sched-day-name" style="color:#FF6B35;">Seg</div>
+        <div class="sched-day-letter" style="color:#FF6B35;">A</div>
+      </div>
+      <div class="sched-day">
+        <div class="sched-day-name">Ter</div>
+        <div class="sched-day-letter">—</div>
+      </div>
+      <div class="sched-day" style="background:#00C9A718;border-color:#00C9A744;">
+        <div class="sched-day-name" style="color:#00C9A7;">Qua</div>
+        <div class="sched-day-letter" style="color:#00C9A7;">B</div>
+      </div>
+      <div class="sched-day">
+        <div class="sched-day-name">Qui</div>
+        <div class="sched-day-letter">—</div>
+      </div>
+      <div class="sched-day" style="background:#A855F718;border-color:#A855F744;">
+        <div class="sched-day-name" style="color:#A855F7;">Sex</div>
+        <div class="sched-day-letter" style="color:#A855F7;">C</div>
+      </div>
+      <div class="sched-day">
+        <div class="sched-day-name">Sáb</div>
+        <div class="sched-day-letter">—</div>
+      </div>
+      <div class="sched-day">
+        <div class="sched-day-name">Dom</div>
+        <div class="sched-day-letter">—</div>
+      </div>
+    </div>
+    <div class="schedule-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#FF6B35;"></div><span style="color:#FF6B35;font-weight:700;">A</span>&nbsp;Quadríceps</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#00C9A7;"></div><span style="color:#00C9A7;font-weight:700;">B</span>&nbsp;Superiores</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#A855F7;"></div><span style="color:#A855F7;font-weight:700;">C</span>&nbsp;Glúteos</div>
+    </div>
+  </div>
+
+  <div style="margin-top:18px;">
+    <div class="section-label">Dicas essenciais</div>
+    <div class="tips-grid">
+      <div class="tip-card"><span class="tip-icon">💧</span>Beba pelo menos 2L de água por dia</div>
+      <div class="tip-card"><span class="tip-icon">🥗</span>Déficit calórico moderado (~300–500 kcal/dia)</div>
+      <div class="tip-card"><span class="tip-icon">🛌</span>Durma 7–9h por noite para recuperação</div>
+      <div class="tip-card"><span class="tip-icon">📈</span>Aumente a carga a cada 2–3 semanas</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const tabColors = { A: 'orange', B: 'teal', C: 'purple' };
+
+  function switchDay(id, btn) {
+    // Hide all panels
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+
+    // Update tabs
+    document.querySelectorAll('.tab').forEach(t => {
+      t.className = 'tab';
+    });
+    btn.classList.add('active-' + tabColors[id]);
+
+    // Close all exercise cards
+    document.querySelectorAll('.ex-card').forEach(c => c.classList.remove('open'));
+  }
+
+  function toggleEx(card) {
+    card.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
